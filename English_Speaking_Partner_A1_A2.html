@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>English Speaking Partner — A1/A2 Iniciante</title>
+<style>
+  :root {
+    --primary-dark: #1B5E20;
+    --primary: #388E3C;
+    --primary-light: #E8F5E9;
+    --primary-border: #A5D6A7;
+    --green: #276749;
+    --red: #C53030;
+    --orange: #DD6B20;
+    --gray: #718096;
+    --gray-light: #E2E8F0;
+    --bg: #F0F4F8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background: var(--bg); color: #1a202c;
+    height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  /* ── SETUP ── */
+  #setupScreen {
+    position: fixed; inset: 0; z-index: 100;
+    background: linear-gradient(160deg, #1B5E20 0%, #388E3C 60%, #66BB6A 100%);
+    display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto;
+  }
+  .setup-card {
+    background: white; border-radius: 20px; padding: 28px 24px;
+    max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .setup-logo { font-size: 38px; text-align: center; margin-bottom: 10px; }
+  .setup-title { font-size: 19px; font-weight: 800; color: var(--primary-dark); text-align: center; margin-bottom: 4px; }
+  .setup-sub { font-size: 12.5px; color: var(--gray); text-align: center; margin-bottom: 22px; }
+  .setup-badge {
+    background: #E8F5E9; border: 1px solid #A5D6A7; border-radius: 8px;
+    padding: 8px 12px; margin-bottom: 18px; font-size: 12.5px; color: #2E7D32;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .steps { margin-bottom: 20px; }
+  .step { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
+  .step-num {
+    background: var(--primary-dark); color: white; border-radius: 50%;
+    width: 22px; height: 22px; font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+  .step-text { font-size: 13px; color: #2D3748; line-height: 1.5; }
+  .step-text a { color: var(--primary); font-weight: 600; }
+  .step-text code { background: #F7FAFC; border: 1px solid var(--gray-light); border-radius: 4px; padding: 1px 5px; font-size: 12px; font-family: monospace; }
+  .setup-label { font-size: 11.5px; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .setup-input {
+    width: 100%; border: 2px solid var(--gray-light); border-radius: 10px;
+    padding: 11px 14px; font-size: 14px; outline: none;
+    font-family: monospace; color: #2D3748; margin-bottom: 6px;
+  }
+  .setup-input:focus { border-color: var(--primary); }
+  .setup-error { color: var(--red); font-size: 12px; margin-bottom: 10px; display: none; }
+  .setup-btn {
+    width: 100%; background: var(--primary-dark); color: white;
+    border: none; border-radius: 10px; padding: 13px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+  }
+  .setup-btn:hover { background: var(--primary); }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    color: white; padding: 11px 14px;
+    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  }
+  .header-left { display: flex; align-items: center; gap: 9px; }
+  .header-title { font-size: 15px; font-weight: 700; line-height: 1.2; }
+  .header-sub { font-size: 10.5px; opacity: 0.75; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .badge { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35); border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+  .icon-btn-hdr { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 17px; }
+  .icon-btn-hdr:hover { color: white; }
+
+  /* ── DAY BANNER ── */
+  .day-banner {
+    background: var(--primary-light); border-bottom: 2px solid var(--primary-border);
+    padding: 8px 14px; display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+  }
+  .day-label { background: var(--primary); color: white; border-radius: 5px; padding: 2px 9px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+  .day-prompt { font-size: 12px; color: #1B5E20; font-style: italic; flex: 1; line-height: 1.4; }
+  .btn-sm { background: none; border: 1px solid var(--primary); color: var(--primary); border-radius: 5px; padding: 3px 9px; font-size: 11px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+  .btn-sm:hover { background: var(--primary-light); }
+
+  /* ── CHAT ── */
+  .chat-area { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
+  .message { display: flex; gap: 8px; }
+  .message.user { flex-direction: row-reverse; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; align-self: flex-end; }
+  .avatar.ai { background: var(--primary); color: white; }
+  .avatar.user { background: var(--primary-dark); color: white; font-weight: 800; font-size: 10px; }
+  .bubble { max-width: 84%; padding: 9px 13px; border-radius: 16px; font-size: 14px; line-height: 1.6; }
+  .message.ai .bubble { background: white; border: 1px solid var(--gray-light); border-bottom-left-radius: 3px; color: #2D3748; }
+  .message.user .bubble { background: var(--primary-dark); color: white; border-bottom-right-radius: 3px; }
+  .corr-block { margin-top: 9px; padding: 8px 11px; background: #FFFAF0; border-left: 3px solid #F6AD55; border-radius: 0 7px 7px 0; font-size: 13px; }
+  .corr-block .clabel { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--orange); margin-bottom: 4px; }
+  .wrong { color: var(--red); text-decoration: line-through; }
+  .right { color: var(--green); font-weight: 600; }
+  .reason { color: var(--gray); font-size: 12px; display: block; margin-top: 2px; }
+  .fb-item { margin-bottom: 6px; font-size: 13px; }
+  .typing-indicator { display: flex; align-items: center; gap: 4px; padding: 9px 12px; }
+  .typing-dot { width: 7px; height: 7px; border-radius: 50%; background: #CBD5E0; animation: bounce 1.2s infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+
+  /* ── INPUT ── */
+  .input-area { background: white; border-top: 1px solid var(--gray-light); padding: 10px 12px; flex-shrink: 0; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+  .mode-tabs { display: flex; gap: 5px; margin-bottom: 7px; overflow-x: auto; padding-bottom: 2px; }
+  .mode-tabs::-webkit-scrollbar { display: none; }
+  .mode-tab { padding: 4px 11px; border-radius: 20px; font-size: 11.5px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--gray-light); background: white; color: var(--gray); white-space: nowrap; flex-shrink: 0; }
+  .mode-tab.active { background: var(--primary-dark); color: white; border-color: var(--primary-dark); }
+  .mode-tab:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+  .mode-desc { font-size: 11px; color: #A0AEC0; margin-bottom: 6px; }
+  .input-hint { font-size: 10.5px; color: #CBD5E0; margin-bottom: 5px; }
+  .input-row { display: flex; gap: 7px; align-items: flex-end; }
+  textarea { flex: 1; border: 2px solid var(--gray-light); border-radius: 10px; padding: 9px 12px; font-size: 14px; font-family: inherit; resize: none; min-height: 42px; max-height: 120px; outline: none; color: #2D3748; line-height: 1.4; transition: border-color 0.15s; }
+  textarea:focus { border-color: var(--primary); }
+  textarea::placeholder { color: #CBD5E0; }
+  .send-btn { background: var(--primary-dark); color: white; border: none; border-radius: 10px; width: 42px; height: 42px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .send-btn:hover { background: var(--primary); }
+  .send-btn:disabled { background: var(--gray-light); cursor: not-allowed; }
+  .send-btn svg { width: 17px; height: 17px; }
+  @media (max-width: 480px) { .bubble { max-width: 90%; } .setup-card { padding: 22px 18px; } }
+</style>
+</head>
+<body>
+
+<div id="setupScreen">
+  <div class="setup-card">
+    <div class="setup-logo">🌱</div>
+    <div class="setup-title">English Speaking Partner</div>
+    <div class="setup-sub">Nível A1–A2 · Iniciante · Primeiros passos no inglês</div>
+    <div class="setup-badge"><span>✅</span><div><strong>100% gratuito</strong> — Groq oferece 14.400 req/dia grátis. Sem cartão.</div></div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-text">Acesse <a href="https://console.groq.com" target="_blank">console.groq.com</a> e crie conta grátis (Google ou GitHub).</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">No menu lateral: <strong>API Keys</strong> → <strong>"Create API Key"</strong> → copie a chave (<code>gsk_...</code>).</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">Cole a chave abaixo e comece a praticar.</div></div>
+    </div>
+    <div class="setup-label">Sua chave do Groq</div>
+    <input type="password" id="apiKeyInput" class="setup-input" placeholder="gsk_..." autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') startApp()">
+    <div class="setup-error" id="setupError"></div>
+    <button class="setup-btn" onclick="startApp()">Começar a praticar →</button>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-left">
+    <span style="font-size:20px">🌱</span>
+    <div>
+      <div class="header-title">English Speaking Partner</div>
+      <div class="header-sub">Nível A1–A2 · Iniciante · Groq AI</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="badge">A1–A2 · Grátis</div>
+    <button class="icon-btn-hdr" onclick="resetKey()" title="Trocar chave">⚙️</button>
+  </div>
+</div>
+
+<div class="day-banner">
+  <div class="day-label" id="dayLabel">DIA —</div>
+  <div class="day-prompt" id="dayPrompt">Carregando...</div>
+  <button class="btn-sm" onclick="newTopic()">↻ Novo</button>
+</div>
+
+<div class="chat-area" id="chatArea"></div>
+
+<div class="input-area">
+  <div class="mode-tabs">
+    <div class="mode-tab active" data-mode="conversation" onclick="setMode('conversation')">💬 Conversa</div>
+    <div class="mode-tab" data-mode="translation" onclick="setMode('translation')">🔤 Tradução</div>
+    <div class="mode-tab" data-mode="drill" onclick="setMode('drill')">🔁 Repetição</div>
+  </div>
+  <div class="mode-desc" id="modeDesc">Escreva em inglês. Pode errar — vou ajudar com calma.</div>
+  <div class="input-hint">Enter para enviar · Shift+Enter para nova linha</div>
+  <div class="input-row">
+    <textarea id="userInput" placeholder="Type in English... (tente!)" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+var GROQ_MODELS = ['llama-3.1-8b-instant','llama3-8b-8192','gemma2-9b-it'];
+var GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+var currentMode = 'conversation';
+var chatHistory = [];
+var isLoading = false;
+var promptIdx = 0;
+var apiKey = '';
+
+var MODES = {
+  conversation: {
+    desc: 'Escreva em inglês. Pode errar — vou ajudar com calma.',
+    sys: 'You are a very patient and encouraging English teacher for a Brazilian adult who is an absolute beginner (A1-A2 level). They know very little English. RULES: Use very simple English in your responses — short sentences, common words only. If they write in Portuguese, gently ask them to try in English and give them an example sentence to model. Correct only ONE error per message, the most critical one, using this format: [Correction: "wrong" → "right" — reason in Portuguese]. Always encourage them. End every message with a very simple question. Keep replies under 80 words. Be warm and patient — never make them feel bad about mistakes.'
+  },
+  translation: {
+    desc: 'Escreva em português — eu traduzo e você repete em inglês.',
+    sys: 'You are an English teacher helping a Brazilian beginner (A1-A2). In TRANSLATION mode: the student writes a sentence in Portuguese. You: (1) give the English translation in bold, (2) break it down word by word: Portuguese → English, (3) give a simple pronunciation tip, (4) ask them to write the English sentence themselves. Keep it simple and encouraging. Always respond in Portuguese for explanations.'
+  },
+  drill: {
+    desc: '🔁 Eu dou uma frase em português — você escreve em inglês.',
+    sys: 'You are a drill instructor for a Brazilian beginner (A1-A2) learning English. In DRILL mode: give the student a very simple Portuguese sentence to translate to English. After they respond: correct it if wrong, praise if right, then give the NEXT drill sentence immediately. Sentences must be A1-A2 level: present simple, "to be", "have", numbers, family, colors, food, daily routine. Format: ✅ [feedback in Portuguese] | 🔁 Próxima: "[Portuguese sentence]"'
+  }
+};
+
+var PROMPTS = [
+  {day:1,  focus:"Me chamo / I am",          text:"Tell me your name and where you are from. (Say: My name is... / I am from...)"},
+  {day:2,  focus:"Família / Family",          text:"Tell me about your family. (Say: I have a... / My mother is...)"},
+  {day:3,  focus:"Números / Numbers",         text:"Count from 1 to 10 in English, then say how old you are."},
+  {day:4,  focus:"Cores / Colors",            text:"Look around you. What colors do you see? (Say: I see a red... / The wall is...)"},
+  {day:5,  focus:"Comida / Food",             text:"What is your favorite food? (Say: I like... / My favorite food is...)"},
+  {day:6,  focus:"Rotina / Daily routine",    text:"What do you do in the morning? (Say: I wake up at... / I eat breakfast...)"},
+  {day:7,  focus:"Trabalho / Work",           text:"Tell me about your job. (Say: I work... / I am a...)"},
+  {day:8,  focus:"Animais / Animals",         text:"Do you have a pet? What animals do you like? (Say: I have a... / I like...)"},
+  {day:9,  focus:"Clima / Weather",           text:"What is the weather like today? (Say: Today it is... / It is hot/cold...)"},
+  {day:10, focus:"Hobbies",                   text:"What do you do on weekends? (Say: On weekends I... / I like to...)"},
+  {day:11, focus:"Casa / Home",               text:"Describe your home. (Say: I live in a... / My home has...)"},
+  {day:12, focus:"Roupas / Clothes",          text:"What are you wearing today? (Say: I am wearing a... / My shirt is...)"},
+  {day:13, focus:"Dias da semana / Days",     text:"What day is today? What do you do on Mondays? (Say: Today is... / On Mondays I...)"},
+  {day:14, focus:"Meses / Months",            text:"What month is it? When is your birthday? (Say: It is... / My birthday is in...)"},
+  {day:15, focus:"Lugares / Places",          text:"Where do you live? What places are near your home? (Say: I live in... / Near my home there is...)"},
+  {day:16, focus:"Transporte / Transport",    text:"How do you go to work? (Say: I go by... / I take the... / I drive...)"},
+  {day:17, focus:"Compras / Shopping",        text:"What did you buy last time you went shopping? (Say: I bought... / It was...)"},
+  {day:18, focus:"Saúde / Health",            text:"How do you feel today? (Say: I feel... / Today I am... / I am healthy/tired...)"},
+  {day:19, focus:"Esportes / Sports",         text:"Do you like sports? Which sports do you play or watch? (Say: I like... / I play...)"},
+  {day:20, focus:"Filmes / Movies",           text:"Do you like movies? What is your favorite movie? (Say: I like... / My favorite movie is...)"},
+  {day:21, focus:"Música / Music",            text:"What music do you like? Who is your favorite singer? (Say: I like... / My favorite...)"},
+  {day:22, focus:"Viagem / Travel",           text:"Have you traveled anywhere? Where would you like to go? (Say: I have been to... / I want to go to...)"},
+  {day:23, focus:"Escola / School",           text:"Did you study English before? What do you find difficult? (Say: I studied... / English is... for me)"},
+  {day:24, focus:"Amigos / Friends",          text:"Tell me about a friend. (Say: My friend's name is... / He/She is... / We like to...)"},
+  {day:25, focus:"Presente simples",          text:"What do you do every day? Use: I wake up, I eat, I work, I sleep."},
+  {day:26, focus:"Há / There is",            text:"Describe what is in the room where you are now. (Say: There is a... / There are...)"},
+  {day:27, focus:"Quero / I want",            text:"What do you want to do this weekend? (Say: I want to... / I would like to...)"},
+  {day:28, focus:"Posso / Can",               text:"What can you do well? (Say: I can... / I cannot... / I am good at...)"},
+  {day:29, focus:"Ontem / Yesterday",         text:"What did you do yesterday? (Say: Yesterday I... / In the morning I...)"},
+  {day:30, focus:"Revisão livre",             text:"Talk about yourself in English for as long as you can. Name, family, job, hobbies. Go!"}
+];
+
+function startApp() {
+  var key = document.getElementById('apiKeyInput').value.trim();
+  var err = document.getElementById('setupError');
+  if (key.length < 10) { err.textContent = 'Cole a chave completa (gsk_...).'; err.style.display = 'block'; return; }
+  err.style.display = 'none';
+  apiKey = key;
+  try { localStorage.setItem('esp_a1a2_key', key); } catch(e) {}
+  document.getElementById('setupScreen').style.display = 'none';
+  initChat();
+}
+function resetKey() {
+  if (!confirm('Trocar a chave?')) return;
+  try { localStorage.removeItem('esp_a1a2_key'); } catch(e) {}
+  apiKey = ''; chatHistory = [];
+  document.getElementById('apiKeyInput').value = '';
+  document.getElementById('setupScreen').style.display = 'flex';
+}
+function checkSavedKey() {
+  try {
+    var saved = localStorage.getItem('esp_a1a2_key');
+    if (saved && saved.length > 10) { apiKey = saved; document.getElementById('apiKeyInput').value = saved; document.getElementById('setupScreen').style.display = 'none'; initChat(); }
+  } catch(e) {}
+}
+
+function initChat() {
+  var doy = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  promptIdx = doy % PROMPTS.length;
+  renderPrompt();
+  var p = PROMPTS[promptIdx];
+  addBubble('ai',
+    '<strong>👋 Olá! Welcome!</strong> Vamos praticar inglês juntos?<br><br>' +
+    '🌱 <strong>Hoje:</strong> ' + esc(p.focus) + '<br><br>' +
+    '<em>"' + esc(p.text) + '"</em><br><br>' +
+    'Não se preocupe com erros — escreva em inglês como conseguir. Eu ajudo! 😊'
+  );
+  document.getElementById('userInput').focus();
+}
+function renderPrompt() {
+  var p = PROMPTS[promptIdx];
+  document.getElementById('dayLabel').textContent = 'DIA ' + p.day;
+  document.getElementById('dayPrompt').textContent = p.focus + ': "' + p.text + '"';
+}
+function newTopic() {
+  promptIdx = Math.floor(Math.random() * PROMPTS.length);
+  renderPrompt();
+  var p = PROMPTS[promptIdx];
+  addBubble('ai', '🎲 <strong>Novo tópico — ' + esc(p.focus) + '</strong><br><br><em>"' + esc(p.text) + '"</em><br><br>Try it! 😊');
+}
+
+function addBubble(role, html) {
+  var chat = document.getElementById('chatArea');
+  var wrap = document.createElement('div'); wrap.className = 'message ' + role;
+  var av = document.createElement('div'); av.className = 'avatar ' + role; av.textContent = role === 'ai' ? '🤖' : 'Eu';
+  var bubble = document.createElement('div'); bubble.className = 'bubble'; bubble.innerHTML = html;
+  wrap.appendChild(av); wrap.appendChild(bubble); chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+}
+function showTyping() {
+  var chat = document.getElementById('chatArea');
+  var wrap = document.createElement('div'); wrap.id = 'typingEl'; wrap.className = 'message ai';
+  var av = document.createElement('div'); av.className = 'avatar ai'; av.textContent = '🤖';
+  var bub = document.createElement('div'); bub.className = 'bubble';
+  bub.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  wrap.appendChild(av); wrap.appendChild(bub); chat.appendChild(wrap); chat.scrollTop = chat.scrollHeight;
+}
+function removeTyping() { var el = document.getElementById('typingEl'); if (el) el.remove(); }
+
+async function tryModels(messages) {
+  var lastErr = null;
+  for (var i = 0; i < GROQ_MODELS.length; i++) {
+    try {
+      var res = await fetch(GROQ_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+        body: JSON.stringify({ model: GROQ_MODELS[i], messages: messages, max_tokens: 512, temperature: 0.7 })
+      });
+      var data = await res.json();
+      if (res.status === 401) throw new Error('FATAL:Chave inválida. Verifique em console.groq.com → API Keys.');
+      if (!res.ok) { lastErr = new Error((data.error && data.error.message) || 'HTTP ' + res.status); continue; }
+      var reply = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      if (!reply) { lastErr = new Error('Resposta vazia.'); continue; }
+      return reply;
+    } catch(e) {
+      if (e.message && e.message.startsWith('FATAL:')) throw new Error(e.message.replace('FATAL:', ''));
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error('Todos os modelos estão indisponíveis. Tente em alguns minutos.');
+}
+
+async function sendMessage() {
+  var input = document.getElementById('userInput');
+  var text = input.value.trim();
+  if (!text || isLoading) return;
+  input.value = ''; input.style.height = '42px';
+  isLoading = true; document.getElementById('sendBtn').disabled = true;
+  addBubble('user', esc(text));
+  chatHistory.push({ role: 'user', content: text });
+  showTyping();
+  try {
+    var p = PROMPTS[promptIdx];
+    var systemText = MODES[currentMode].sys + '\n\nToday\'s topic: "' + p.text + '" (Focus: ' + p.focus + ')';
+    var messages = [{ role: 'system', content: systemText }].concat(chatHistory.slice(-12));
+    var reply = await tryModels(messages);
+    removeTyping();
+    chatHistory.push({ role: 'assistant', content: reply });
+    addBubble('ai', toHtml(reply));
+  } catch(err) {
+    removeTyping();
+    addBubble('ai', '⚠️ <strong>Erro:</strong> ' + esc(err.message) + '<br><small style="color:#718096">Pressione ⚙️ para verificar sua chave.</small>');
+  }
+  isLoading = false; document.getElementById('sendBtn').disabled = false;
+  document.getElementById('userInput').focus();
+}
+
+function setMode(m) {
+  currentMode = m; chatHistory = [];
+  document.querySelectorAll('.mode-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelector('[data-mode="' + m + '"]').classList.add('active');
+  document.getElementById('modeDesc').textContent = MODES[m].desc;
+  var intros = {
+    conversation: 'Modo <strong>Conversa</strong> ativado. Escreva em inglês — com calma! 😊',
+    translation: 'Modo <strong>Tradução</strong> ativado. Escreva uma frase em português e eu traduzo!',
+    drill: '🔁 Modo <strong>Repetição</strong>!<br><br>🔁 <strong>Primeira frase:</strong> "Meu nome é..." — escreva isso em inglês!'
+  };
+  addBubble('ai', intros[m]);
+}
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function toHtml(text) {
+  var s = esc(text);
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/\*([^*\n]+?)\*/g, '<em>$1</em>');
+  s = s.replace(/\[Correction:\s*&quot;(.+?)&quot;\s*(?:→|->|&rarr;)\s*&quot;(.+?)&quot;\s*(?:—|--|&mdash;|-{1,2})\s*(.+?)\]/g,
+    '<div class="corr-block"><div class="clabel">✏️ Correção</div><span class="wrong">$1</span> → <span class="right">$2</span><span class="reason">$3</span></div>');
+  s = s.replace(/❌\s*&quot;(.+?)&quot;\s*(?:→|->)\s*✅\s*&quot;(.+?)&quot;\s*(?:—|-)\s*([^\n<]+)/g,
+    '<div class="fb-item">❌ <span class="wrong">$1</span> → ✅ <span class="right">$2</span><span class="reason">$3</span></div>');
+  s = s.replace(/\n/g, '<br>');
+  return s;
+}
+function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
+function autoResize(el) { el.style.height = '42px'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
+
+checkSavedKey();
+</script>
+</body>
+</html>

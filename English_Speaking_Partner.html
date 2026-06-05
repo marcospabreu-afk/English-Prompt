@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>English Speaking Partner — Marcos</title>
+<style>
+  :root {
+    --blue-dark: #1F4E79;
+    --blue: #2E75B6;
+    --blue-light: #EBF8FF;
+    --blue-border: #BEE3F8;
+    --green: #276749;
+    --red: #C53030;
+    --orange: #DD6B20;
+    --gray: #718096;
+    --gray-light: #E2E8F0;
+    --bg: #F0F4F8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background: var(--bg); color: #1a202c;
+    height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  /* ── SETUP ── */
+  #setupScreen {
+    position: fixed; inset: 0; z-index: 100;
+    background: linear-gradient(160deg, #1F4E79 0%, #2E75B6 60%, #63B3ED 100%);
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    overflow-y: auto;
+  }
+  .setup-card {
+    background: white; border-radius: 20px; padding: 28px 24px;
+    max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .setup-logo { font-size: 38px; text-align: center; margin-bottom: 10px; }
+  .setup-title { font-size: 19px; font-weight: 800; color: var(--blue-dark); text-align: center; margin-bottom: 4px; }
+  .setup-sub { font-size: 12.5px; color: var(--gray); text-align: center; margin-bottom: 22px; }
+
+  .setup-badge {
+    background: #E8F5E9; border: 1px solid #A5D6A7; border-radius: 8px;
+    padding: 8px 12px; margin-bottom: 18px; font-size: 12.5px; color: #2E7D32;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .setup-badge strong { font-weight: 700; }
+
+  .steps { margin-bottom: 20px; }
+  .step { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
+  .step-num {
+    background: var(--blue-dark); color: white; border-radius: 50%;
+    width: 22px; height: 22px; font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+  .step-text { font-size: 13px; color: #2D3748; line-height: 1.5; }
+  .step-text a { color: var(--blue); font-weight: 600; }
+  .step-text code {
+    background: #F7FAFC; border: 1px solid var(--gray-light);
+    border-radius: 4px; padding: 1px 5px; font-size: 12px; font-family: monospace;
+  }
+
+  .setup-label { font-size: 11.5px; font-weight: 700; color: var(--blue-dark); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .setup-input {
+    width: 100%; border: 2px solid var(--gray-light); border-radius: 10px;
+    padding: 11px 14px; font-size: 14px; outline: none;
+    font-family: monospace; color: #2D3748; margin-bottom: 6px;
+  }
+  .setup-input:focus { border-color: var(--blue); }
+  .setup-error { color: var(--red); font-size: 12px; margin-bottom: 10px; display: none; min-height: 16px; }
+  .setup-btn {
+    width: 100%; background: var(--blue-dark); color: white;
+    border: none; border-radius: 10px; padding: 13px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+  }
+  .setup-btn:hover { background: var(--blue); }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%);
+    color: white; padding: 11px 14px;
+    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  }
+  .header-left { display: flex; align-items: center; gap: 9px; }
+  .header-title { font-size: 15px; font-weight: 700; line-height: 1.2; }
+  .header-sub { font-size: 10.5px; opacity: 0.75; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .badge {
+    background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700;
+  }
+  .icon-btn-hdr { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 17px; }
+  .icon-btn-hdr:hover { color: white; }
+
+  /* ── DAY BANNER ── */
+  .day-banner {
+    background: var(--blue-light); border-bottom: 2px solid var(--blue-border);
+    padding: 8px 14px; display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+  }
+  .day-label {
+    background: var(--blue); color: white; border-radius: 5px;
+    padding: 2px 9px; font-size: 11px; font-weight: 700; white-space: nowrap;
+  }
+  .day-prompt { font-size: 12px; color: #2C5282; font-style: italic; flex: 1; line-height: 1.4; }
+  .btn-sm {
+    background: none; border: 1px solid var(--blue); color: var(--blue);
+    border-radius: 5px; padding: 3px 9px; font-size: 11px;
+    cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-sm:hover { background: var(--blue-light); }
+
+  /* ── CHAT ── */
+  .chat-area {
+    flex: 1; overflow-y: auto; padding: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .message { display: flex; gap: 8px; }
+  .message.user { flex-direction: row-reverse; }
+  .avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0; align-self: flex-end;
+  }
+  .avatar.ai { background: var(--blue); color: white; }
+  .avatar.user { background: var(--blue-dark); color: white; font-weight: 800; font-size: 10px; }
+  .bubble {
+    max-width: 84%; padding: 9px 13px; border-radius: 16px;
+    font-size: 14px; line-height: 1.6;
+  }
+  .message.ai .bubble {
+    background: white; border: 1px solid var(--gray-light);
+    border-bottom-left-radius: 3px; color: #2D3748;
+  }
+  .message.user .bubble {
+    background: var(--blue-dark); color: white; border-bottom-right-radius: 3px;
+  }
+  .corr-block {
+    margin-top: 9px; padding: 8px 11px;
+    background: #FFFAF0; border-left: 3px solid #F6AD55;
+    border-radius: 0 7px 7px 0; font-size: 13px;
+  }
+  .corr-block .clabel { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--orange); margin-bottom: 4px; }
+  .wrong { color: var(--red); text-decoration: line-through; }
+  .right { color: var(--green); font-weight: 600; }
+  .reason { color: var(--gray); font-size: 12px; display: block; margin-top: 2px; }
+  .fb-item { margin-bottom: 6px; font-size: 13px; }
+
+  .typing-indicator { display: flex; align-items: center; gap: 4px; padding: 9px 12px; }
+  .typing-dot { width: 7px; height: 7px; border-radius: 50%; background: #CBD5E0; animation: bounce 1.2s infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+
+  /* ── INPUT ── */
+  .input-area {
+    background: white; border-top: 1px solid var(--gray-light);
+    padding: 10px 12px; flex-shrink: 0;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+  .mode-tabs { display: flex; gap: 5px; margin-bottom: 7px; overflow-x: auto; padding-bottom: 2px; }
+  .mode-tabs::-webkit-scrollbar { display: none; }
+  .mode-tab {
+    padding: 4px 11px; border-radius: 20px; font-size: 11.5px; font-weight: 600;
+    cursor: pointer; border: 1.5px solid var(--gray-light);
+    background: white; color: var(--gray); white-space: nowrap; flex-shrink: 0;
+  }
+  .mode-tab.active { background: var(--blue-dark); color: white; border-color: var(--blue-dark); }
+  .mode-tab:hover:not(.active) { border-color: var(--blue); color: var(--blue); }
+  .mode-desc { font-size: 11px; color: #A0AEC0; margin-bottom: 6px; }
+  .input-hint { font-size: 10.5px; color: #CBD5E0; margin-bottom: 5px; }
+  .input-row { display: flex; gap: 7px; align-items: flex-end; }
+  textarea {
+    flex: 1; border: 2px solid var(--gray-light); border-radius: 10px;
+    padding: 9px 12px; font-size: 14px; font-family: inherit;
+    resize: none; min-height: 42px; max-height: 120px;
+    outline: none; color: #2D3748; line-height: 1.4; transition: border-color 0.15s;
+  }
+  textarea:focus { border-color: var(--blue); }
+  textarea::placeholder { color: #CBD5E0; }
+  .send-btn {
+    background: var(--blue-dark); color: white; border: none;
+    border-radius: 10px; width: 42px; height: 42px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .send-btn:hover { background: var(--blue); }
+  .send-btn:disabled { background: var(--gray-light); cursor: not-allowed; }
+  .send-btn svg { width: 17px; height: 17px; }
+
+  @media (max-width: 480px) {
+    .bubble { max-width: 90%; }
+    .setup-card { padding: 22px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ SETUP ═══════════════════════════════════════════════════════ -->
+<div id="setupScreen">
+  <div class="setup-card">
+    <div class="setup-logo">🎙️</div>
+    <div class="setup-title">English Speaking Partner</div>
+    <div class="setup-sub">Agente de treino personalizado · Marcos · B1 → B2</div>
+
+    <div class="setup-badge">
+      <span>✅</span>
+      <div><strong>100% gratuito</strong> — Groq oferece 14.400 req/dia grátis. Sem cartão de crédito.</div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          Acesse <a href="https://console.groq.com" target="_blank">console.groq.com</a>
+          e crie uma conta gratuita (pode usar Google ou GitHub).
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          No menu lateral, clique em <strong>API Keys</strong> → <strong>"Create API Key"</strong> → copie a chave
+          (começa com <code>gsk_...</code>).
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">Cole a chave abaixo e comece a praticar.</div>
+      </div>
+    </div>
+
+    <div class="setup-label">Sua chave do Groq</div>
+    <input type="password" id="apiKeyInput" class="setup-input"
+      placeholder="gsk_..." autocomplete="off" spellcheck="false"
+      onkeydown="if(event.key==='Enter') startApp()">
+    <div class="setup-error" id="setupError"></div>
+    <button class="setup-btn" onclick="startApp()">Começar a praticar →</button>
+  </div>
+</div>
+
+<!-- ══ APP ══════════════════════════════════════════════════════════ -->
+<div class="header">
+  <div class="header-left">
+    <span style="font-size:20px">🎙️</span>
+    <div>
+      <div class="header-title">English Speaking Partner</div>
+      <div class="header-sub">Marcos · 30 dias · B1 → B2</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="badge">Groq · Grátis</div>
+    <button class="icon-btn-hdr" onclick="resetKey()" title="Trocar chave">⚙️</button>
+  </div>
+</div>
+
+<div class="day-banner">
+  <div class="day-label" id="dayLabel">DIA —</div>
+  <div class="day-prompt" id="dayPrompt">Carregando...</div>
+  <button class="btn-sm" onclick="newTopic()">↻ Novo</button>
+</div>
+
+<div class="chat-area" id="chatArea"></div>
+
+<div class="input-area">
+  <div class="mode-tabs">
+    <div class="mode-tab active" data-mode="conversation" onclick="setMode('conversation')">💬 Conversa</div>
+    <div class="mode-tab" data-mode="correction" onclick="setMode('correction')">✏️ Correção</div>
+    <div class="mode-tab" data-mode="challenge" onclick="setMode('challenge')">⚡ Desafio</div>
+  </div>
+  <div class="mode-desc" id="modeDesc">Responda em inglês. Vou conversar e corrigir o essencial.</div>
+  <div class="input-hint">Enter para enviar · Shift+Enter para nova linha</div>
+  <div class="input-row">
+    <textarea id="userInput" placeholder="Type in English..." rows="1"
+      onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="22" y1="2" x2="11" y2="13"></line>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+// Groq — modelos gratuitos com fallback automático
+var GROQ_MODELS = [
+  'llama-3.1-8b-instant',
+  'llama3-8b-8192',
+  'gemma2-9b-it'
+];
+var OR_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
+var currentMode = 'conversation';
+var chatHistory = [];   // {role: 'user'|'model', parts: [{text}]}
+var isLoading   = false;
+var promptIdx   = 0;
+var apiKey      = '';
+
+// ── MODES ─────────────────────────────────────────────────────────────────────
+var MODES = {
+  conversation: {
+    desc: 'Responda em inglês. Vou conversar e corrigir o essencial.',
+    sys:  'You are an English conversation partner for Marcos, a Brazilian adult manager at Brazil Post, Curitiba (B1-B2 level). He manages 90 people in the international department. He understands English well but struggles to speak fluently. His recurring errors: (1) mixes past and present tense — e.g. says "I have a situation" instead of "I had a situation"; (2) Portuguese word order bleeding in; (3) says adjective "basic" instead of adverb "basically"; (4) drops articles and prepositions. RULES: Have a warm, natural conversation in English. Ask one follow-up question to keep him talking. At the END of your reply, if he made an error, add EXACTLY ONE correction in this format: [Correction: "wrong phrase" → "correct phrase" — brief reason in Portuguese]. Never correct more than 1 error per message. Keep total reply under 100 words.'
+  },
+  correction: {
+    desc: 'Analiso TUDO com feedback detalhado em português.',
+    sys:  'You are a meticulous English teacher for Marcos (Brazilian manager, B1-B2, Brazil Post). His errors to watch: past/present tense mixing, Portuguese word order, "basic" instead of "basically", missing articles/prepositions. RULES: First respond naturally to what he said (1-2 sentences in English). Then write a DETAILED FEEDBACK section. List every error found in this exact format: ❌ "wrong phrase" → ✅ "correct phrase" — explanation in Portuguese. End with: Fluência: X/10 and one sentence of encouragement in Portuguese.'
+  },
+  challenge: {
+    desc: '⚡ Nova situação de trabalho a cada vez. Sem pensar. Vai!',
+    sys:  'You are a high-energy English coach for Marcos (Brazilian manager at Brazil Post, B1-B2). After he responds, give lightning-fast feedback on his 1-2 most critical errors (one line each). Then IMMEDIATELY throw the next work scenario challenge. Challenges: opening meetings, delivering bad news to director, handling conflict, explaining results, onboarding a new employee. Format: ✅ [quick feedback] | 🎯 Next challenge: [scenario]. Very short and fast-paced.'
+  }
+};
+
+// ── PROMPTS ───────────────────────────────────────────────────────────────────
+var PROMPTS = [
+  {day:1,  focus:"Apresentação profissional",  text:"Tell me about yourself and your role. What does a typical day look like?"},
+  {day:2,  focus:"Passado simples",            text:"Describe a challenging situation at work you handled well recently."},
+  {day:3,  focus:"Storytelling",               text:"Tell me a story about a problem in your team and how you resolved it."},
+  {day:4,  focus:"Gestão de equipe",           text:"You manage 90 people. How do you keep everyone aligned and motivated?"},
+  {day:5,  focus:"Conflito",                   text:"Two employees are not getting along. Walk me through how you handle it."},
+  {day:6,  focus:"Tomada de decisão",          text:"Describe a difficult decision you had to make at work recently."},
+  {day:7,  focus:"Rotina e prioridades",       text:"What are your top 3 priorities this week and why?"},
+  {day:8,  focus:"I'm responsible for...",     text:"Use 'I'm responsible for...' to describe everything in your job."},
+  {day:9,  focus:"Basically + estrutura",      text:"Explain what your international department does. Start with: 'Basically, our team...'"},
+  {day:10, focus:"Conectores de causa",        text:"Describe a work challenge using: because of that, as a result, that's why."},
+  {day:11, focus:"Artigos na prática",         text:"Describe your office and team setup. Focus on using 'a', 'an', 'the' correctly."},
+  {day:12, focus:"Abertura de reunião",        text:"You're opening a team meeting right now. What do you say in the first 2 minutes?"},
+  {day:13, focus:"Conquista profissional",     text:"What has been your biggest professional achievement in the last 6 months?"},
+  {day:14, focus:"Feedback para funcionário",  text:"Give feedback to an employee who is talented but always late to meetings."},
+  {day:15, focus:"Resposta rápida",            text:"Quick fire: What do you do? Biggest challenge? What are you most proud of at work?"},
+  {day:16, focus:"Improviso — liderança",      text:"What makes a great manager? Talk for as long as you can without stopping."},
+  {day:17, focus:"Estilo de liderança",        text:"Describe your leadership style. Do you prefer to delegate or stay hands-on? Why?"},
+  {day:18, focus:"Advérbios naturais",         text:"Talk about your workday using: basically, actually, honestly, generally, specifically."},
+  {day:19, focus:"Preposições profissionais",  text:"Use each in a real context: I'm responsible for / focused on / dealing with."},
+  {day:20, focus:"Apresentação completa",      text:"Pretend I'm a new colleague. Introduce yourself, your team and your department."},
+  {day:21, focus:"Avaliação de desempenho",    text:"Walk me through how you evaluate employee performance in your department."},
+  {day:22, focus:"Relatório para diretoria",   text:"Give me a 2-minute status update as if I'm your director."},
+  {day:23, focus:"Improviso total",            text:"Talk about anything work-related for as long as possible. No stopping."},
+  {day:24, focus:"Processo operacional",       text:"Describe how your team processes international mail step by step."},
+  {day:25, focus:"Artigos — foco intenso",     text:"Tell me about your team structure. Use articles correctly every single time."},
+  {day:26, focus:"Entrevista executiva",       text:"Why should you be trusted to manage international operations? Convince me."},
+  {day:27, focus:"Situação de crise",          text:"A major failure happened in your department. Walk me through your response."},
+  {day:28, focus:"Mentoria",                   text:"A junior employee asks: how did you become a manager? What do you tell them?"},
+  {day:29, focus:"Análise de progresso",       text:"Compare yourself now vs. when you started. What improved? What is still hard?"},
+  {day:30, focus:"Conversa livre",             text:"Talk to me like a friend. What has been the most interesting thing at work this month?"}
+];
+
+// ── SETUP ─────────────────────────────────────────────────────────────────────
+function startApp() {
+  var key = document.getElementById('apiKeyInput').value.trim();
+  var err = document.getElementById('setupError');
+  if (key.length < 10) {
+    err.textContent = 'Cole a chave completa (começa com sk-or-...).';
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+  apiKey = key;
+  try { localStorage.setItem('esp_groq_key', key); } catch(e) {}
+  document.getElementById('setupScreen').style.display = 'none';
+  initChat();
+}
+
+function resetKey() {
+  if (!confirm('Trocar a chave de API?')) return;
+  try { localStorage.removeItem('esp_groq_key'); } catch(e) {}
+  apiKey = '';
+  chatHistory = [];
+  document.getElementById('apiKeyInput').value = '';
+  document.getElementById('setupScreen').style.display = 'flex';
+}
+
+function checkSavedKey() {
+  try {
+    var saved = localStorage.getItem('esp_groq_key');
+    if (saved && saved.length > 10) {
+      apiKey = saved;
+      document.getElementById('apiKeyInput').value = saved;
+      document.getElementById('setupScreen').style.display = 'none';
+      initChat();
+    }
+  } catch(e) {}
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function initChat() {
+  var doy = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  promptIdx = doy % PROMPTS.length;
+  renderPrompt();
+  var p = PROMPTS[promptIdx];
+  addBubble('ai',
+    '<strong>👋 Olá, Marcos!</strong> Pronto para praticar?<br><br>' +
+    '🎯 <strong>Foco de hoje:</strong> ' + esc(p.focus) + '<br><br>' +
+    '<em>"' + esc(p.text) + '"</em><br><br>' +
+    'Não pense muito — escreva como falaria em voz alta.'
+  );
+  document.getElementById('userInput').focus();
+}
+
+function renderPrompt() {
+  var p = PROMPTS[promptIdx];
+  document.getElementById('dayLabel').textContent = 'DIA ' + p.day;
+  document.getElementById('dayPrompt').textContent = p.focus + ': "' + p.text + '"';
+}
+
+function newTopic() {
+  promptIdx = Math.floor(Math.random() * PROMPTS.length);
+  renderPrompt();
+  var p = PROMPTS[promptIdx];
+  addBubble('ai',
+    '🎲 <strong>Novo tópico — ' + esc(p.focus) + '</strong><br><br>' +
+    '<em>"' + esc(p.text) + '"</em><br><br>Vai lá!'
+  );
+}
+
+// ── BUBBLES ───────────────────────────────────────────────────────────────────
+function addBubble(role, html) {
+  var chat = document.getElementById('chatArea');
+  var wrap = document.createElement('div');
+  wrap.className = 'message ' + role;
+  var av = document.createElement('div');
+  av.className = 'avatar ' + role;
+  av.textContent = role === 'ai' ? '🤖' : 'MP';
+  var bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.innerHTML = html;
+  wrap.appendChild(av);
+  wrap.appendChild(bubble);
+  chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function showTyping() {
+  var chat = document.getElementById('chatArea');
+  var wrap = document.createElement('div');
+  wrap.id = 'typingEl'; wrap.className = 'message ai';
+  var av = document.createElement('div');
+  av.className = 'avatar ai'; av.textContent = '🤖';
+  var bub = document.createElement('div');
+  bub.className = 'bubble';
+  bub.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  wrap.appendChild(av); wrap.appendChild(bub);
+  chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+}
+function removeTyping() { var el = document.getElementById('typingEl'); if (el) el.remove(); }
+
+// ── API COM FALLBACK ──────────────────────────────────────────────────────────
+async function tryModels(messages) {
+  var lastErr = null;
+  for (var i = 0; i < GROQ_MODELS.length; i++) {
+    var model = GROQ_MODELS[i];
+    try {
+      var res = await fetch(OR_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiKey,
+          'HTTP-Referer': 'https://english-speaking-partner.local',
+          'X-Title': 'English Speaking Partner'
+        },
+        body: JSON.stringify({ model: model, messages: messages, max_tokens: 512, temperature: 0.75 })
+      });
+
+      var data = await res.json();
+
+      if (res.status === 401) throw new Error('FATAL:Chave inválida. Verifique em console.groq.com → API Keys.');
+      if (res.status === 400) throw new Error('FATAL:Erro na requisição. Verifique sua chave no console.groq.com.');
+
+      if (!res.ok) {
+        // 429 ou outro erro temporário — tenta próximo modelo
+        lastErr = new Error((data.error && data.error.message) || 'HTTP ' + res.status);
+        continue;
+      }
+
+      var reply = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      if (!reply) { lastErr = new Error('Resposta vazia do modelo ' + model); continue; }
+
+      return reply; // sucesso
+
+    } catch(e) {
+      if (e.message && e.message.startsWith('FATAL:')) throw new Error(e.message.replace('FATAL:', ''));
+      lastErr = e;
+      // continua para o próximo modelo
+    }
+  }
+  throw lastErr || new Error('Todos os modelos estão indisponíveis. Tente em alguns minutos.');
+}
+
+// ── SEND ──────────────────────────────────────────────────────────────────────
+async function sendMessage() {
+  var input = document.getElementById('userInput');
+  var text  = input.value.trim();
+  if (!text || isLoading) return;
+
+  input.value = ''; input.style.height = '42px';
+  isLoading = true;
+  document.getElementById('sendBtn').disabled = true;
+
+  addBubble('user', esc(text));
+
+  chatHistory.push({ role: 'user', content: text });
+
+  showTyping();
+
+  try {
+    var p = PROMPTS[promptIdx];
+    var systemText = MODES[currentMode].sys +
+      '\n\nToday\'s speaking prompt for Marcos: "' + p.text + '" (Focus: ' + p.focus + ')';
+    var messages = [{ role: 'system', content: systemText }].concat(chatHistory.slice(-12));
+
+    var reply = await tryModels(messages);
+
+    removeTyping();
+    chatHistory.push({ role: 'assistant', content: reply });
+    addBubble('ai', toHtml(reply));
+
+  } catch(err) {
+    removeTyping();
+    addBubble('ai',
+      '⚠️ <strong>Erro:</strong> ' + esc(err.message) + '<br>' +
+      '<small style="color:#718096;font-size:12px">Pressione ⚙️ no topo para verificar sua chave.</small>'
+    );
+  }
+
+  isLoading = false;
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('userInput').focus();
+}
+
+// ── FORMAT ────────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+}
+
+function toHtml(text) {
+  var s = esc(text);
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/\*([^*\n]+?)\*/g, '<em>$1</em>');
+  // [Correction: "x" → "y" — reason]
+  s = s.replace(/\[Correction:\s*&quot;(.+?)&quot;\s*(?:→|->|&rarr;)\s*&quot;(.+?)&quot;\s*(?:—|--|&mdash;|-{1,2})\s*(.+?)\]/g,
+    '<div class="corr-block"><div class="clabel">✏️ Correção</div>' +
+    '<span class="wrong">$1</span> → <span class="right">$2</span>' +
+    '<span class="reason">$3</span></div>');
+  // ❌ "x" → ✅ "y" — reason
+  s = s.replace(/❌\s*&quot;(.+?)&quot;\s*(?:→|->)\s*✅\s*&quot;(.+?)&quot;\s*(?:—|-)\s*([^\n<]+)/g,
+    '<div class="fb-item">❌ <span class="wrong">$1</span> → ✅ <span class="right">$2</span><span class="reason">$3</span></div>');
+  s = s.replace(/\n/g, '<br>');
+  return s;
+}
+
+// ── UI ────────────────────────────────────────────────────────────────────────
+function setMode(m) {
+  currentMode = m;
+  chatHistory = [];
+  document.querySelectorAll('.mode-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelector('[data-mode="' + m + '"]').classList.add('active');
+  document.getElementById('modeDesc').textContent = MODES[m].desc;
+  var intros = {
+    conversation: 'Modo <strong>Conversa</strong> ativado. Responda em inglês e eu guio você.',
+    correction:   'Modo <strong>Correção</strong> ativado. Analiso tudo com feedback detalhado em português.',
+    challenge:    '⚡ Modo <strong>Desafio</strong>!<br><br>🎯 <strong>First challenge:</strong> You\'re about to open your Monday morning meeting with 90 people. What do you say in the first 60 seconds? Go!'
+  };
+  addBubble('ai', intros[m]);
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = '42px';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ── START ─────────────────────────────────────────────────────────────────────
+checkSavedKey();
+</script>
+</body>
+</html>
