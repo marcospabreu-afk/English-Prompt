@@ -157,6 +157,7 @@
     <div class="mode-tab active" data-mode="debate" onclick="setMode('debate')">⚡ Debate</div>
     <div class="mode-tab" data-mode="refinement" onclick="setMode('refinement')">✨ Refinamento</div>
     <div class="mode-tab" data-mode="presentation" onclick="setMode('presentation')">🎤 Apresentação</div>
+    <div class="mode-tab" data-mode="phrasal" onclick="setMode('phrasal')">📚 Phrasal Verbs</div>
   </div>
   <div class="mode-desc" id="modeDesc">Debata, argumente, nuance. Foco em sofisticação e registro.</div>
   <div class="input-hint">Enter para enviar · Shift+Enter para nova linha</div>
@@ -189,8 +190,170 @@ var MODES = {
   presentation: {
     desc: '🎤 Pratique falas, pitches e apresentações executivas em inglês.',
     sys: 'You are an executive communication coach for a C1-C2 Brazilian professional. In PRESENTATION mode: the user is practicing a speech, pitch, or professional presentation. After they write their segment: (1) give rapid feedback on delivery structure (signposting, transitions, emphasis), (2) flag 1-2 phrasing issues, (3) suggest a stronger opening or closing if relevant, (4) prompt them with the next section: "Now continue with..." or "Address the [objection/question]...". Focus on executive presence, persuasion, and clarity. Be demanding but constructive.'
+  },
+  phrasal: {
+    desc: '📚 Um phrasal verb por vez — uso preciso, registro e nuance.',
+    sys: 'You are an exacting English coach for a C1-C2 Brazilian professional mastering phrasal verbs. The user was given a phrasal verb and asked to use it in a sentence. RULES: (1) Assess precision, register and naturalness — not just correctness. (2) If the usage is unnatural, imprecise or misses nuance: [Refinement: "their sentence" → "refined sentence" — reason in Portuguese]. (3) If excellent, acknowledge briefly and show a second, different meaning or register of the same verb if one exists. (4) Then present the NEXT phrasal verb exactly as given in the context, formatted as: 📚 **Next:** [verb] — [meaning]. Challenge them to use it in a sophisticated professional context. Keep replies under 100 words.'
   }
 };
+
+// ─── 140 PHRASAL VERBS ────────────────────────────────────────────────────────
+var PHRASAL_VERBS = [
+  ["Ask for","to request something"],
+  ["Ask out","to invite someone on a date"],
+  ["Back down","to stop insisting on something; to withdraw from a position or argument"],
+  ["Back off","to move away; to stop pressuring or bothering someone"],
+  ["Back up","to support someone; to make a copy of data; to move backwards"],
+  ["Beat up","to hurt someone physically by hitting them repeatedly"],
+  ["Blow up","to explode; to suddenly become very angry; to inflate"],
+  ["Break down","to stop working (machine); to lose emotional control; to analyze in parts"],
+  ["Break in","to enter a place illegally by force; to interrupt; to make something new comfortable (like shoes)"],
+  ["Break through","to overcome an obstacle; to make an important discovery"],
+  ["Break up","to end a romantic relationship; to separate into pieces"],
+  ["Brush up","to improve or refresh a skill you already have"],
+  ["Burn down","to destroy a building completely by fire"],
+  ["Burn up","to be destroyed by fire or heat; to consume (energy, fuel)"],
+  ["Call off","to cancel something planned"],
+  ["Calm down","to become less angry, upset, or excited"],
+  ["Carry away","to get carried away: to become too excited and lose control of what you do"],
+  ["Carry on","to continue doing something"],
+  ["Catch up","to reach someone ahead of you; to get up to date (work, news, a friend)"],
+  ["Check in","to register at a hotel or airport; to briefly contact someone to see how they are"],
+  ["Check out","to leave a hotel and pay; to look at or examine something interesting"],
+  ["Chicken out","to decide not to do something because you are afraid"],
+  ["Come across","to find something by chance; to give a certain impression"],
+  ["Come back","to return"],
+  ["Come down to","to depend mainly on; to be essentially a matter of"],
+  ["Come over","to visit someone at their home"],
+  ["Come up with","to think of an idea, plan, or solution"],
+  ["Count on","to rely on or trust someone or something"],
+  ["Cut back","to reduce the amount of something (spending, consumption)"],
+  ["Cut down","to reduce; to make a tree fall"],
+  ["Cut off","to interrupt or disconnect; to isolate; to stop the supply of something"],
+  ["Deal with","to handle a situation, problem, or person"],
+  ["Do without","to manage or survive without something"],
+  ["Doze off","to fall asleep unintentionally, usually for a short time"],
+  ["Dress up","to wear formal or special clothes; to wear a costume"],
+  ["Drop out","to quit school, a course, or an activity before finishing"],
+  ["Eat up","to eat all of something; to consume completely (time, resources)"],
+  ["End up","to finally be in a situation or place, often unexpectedly"],
+  ["Fall apart","to break into pieces; to fail emotionally or stop functioning"],
+  ["Fall for","to fall in love with someone; to be tricked by something"],
+  ["Fill in","to complete a form; to substitute for someone; to give someone missing information"],
+  ["Fill out","to complete a form or document with information"],
+  ["Fill up","to make something completely full (like a fuel tank)"],
+  ["Find out","to discover information or learn a fact"],
+  ["Flip out","to react in a very angry or excited, uncontrolled way"],
+  ["Follow up","to take further action after something; to check on progress later"],
+  ["Freak out","to become very anxious, scared, or upset; to panic"],
+  ["Get along","to have a good relationship with someone"],
+  ["Get away","to escape; to go on a short vacation"],
+  ["Get back","to return; to recover something"],
+  ["Get back at","to take revenge on someone"],
+  ["Get back to","to reply to or contact someone later"],
+  ["Get in","to enter (a car, a place); to arrive"],
+  ["Get off","to leave a bus, train, or plane; to finish work"],
+  ["Get out","to leave a place; to escape"],
+  ["Get over","to recover from an illness, disappointment, or breakup"],
+  ["Get to","to arrive at; to annoy or affect someone emotionally"],
+  ["Get together","to meet socially"],
+  ["Get up","to rise from bed; to stand up"],
+  ["Give away","to give something for free; to reveal a secret"],
+  ["Give in","to finally agree to something after resisting; to surrender"],
+  ["Give out","to distribute; to stop working (strength, machine)"],
+  ["Give up","to stop trying; to quit a habit"],
+  ["Go along with","to agree with or accept a plan or idea"],
+  ["Go over","to review or examine something carefully"],
+  ["Go through with","to do something difficult as planned, despite doubts"],
+  ["Goof around","to spend time doing silly or unimportant things"],
+  ["Grow up","to become an adult; to become more mature"],
+  ["Hand back","to return something to the person who gave it to you"],
+  ["Hand in","to submit work (homework, a report, a resignation)"],
+  ["Hand out","to distribute things to a group of people"],
+  ["Hang out","to spend time relaxing, usually with friends"],
+  ["Hang up","to end a phone call; to put clothes on a hanger"],
+  ["Head back","to return to a place; to start going back"],
+  ["Help out","to assist someone, especially in a difficult situation"],
+  ["Hit on","to flirt with someone; to suddenly think of (an idea)"],
+  ["Hold against","to blame someone for something and keep resenting them for it"],
+  ["Hold off","to delay doing something; to postpone"],
+  ["Hold on","to wait; to grip something tightly"],
+  ["Hook up","to connect a device; to meet someone (informal); to start a casual relationship"],
+  ["Hurry up","to do something faster"],
+  ["Keep up","to continue at the same speed or level; to stay informed"],
+  ["Lay down","to put something down; to establish rules"],
+  ["Lay off","to dismiss employees, usually for economic reasons; to stop doing something"],
+  ["Lead up to","to happen before and cause an event; to prepare the way for"],
+  ["Leave behind","to not take someone or something with you; to forget"],
+  ["Let down","to disappoint someone"],
+  ["Lighten up","to become more relaxed and less serious"],
+  ["Line up","to form a line/queue; to organize or arrange events"],
+  ["Look forward to","to feel excited about something that will happen"],
+  ["Look into","to investigate or examine something"],
+  ["Look out","to be careful; to watch for danger"],
+  ["Look up to","to admire and respect someone"],
+  ["Make of","to have an opinion or interpretation about something (What do you make of it?)"],
+  ["Make up","to invent a story; to reconcile after a fight; to compensate for something"],
+  ["Mess up","to make a mistake; to make something dirty or disorganized"],
+  ["Mix up","to confuse two things or people; to put things in the wrong order"],
+  ["Narrow down","to reduce the number of options"],
+  ["Pay back","to return money you owe; to take revenge"],
+  ["Pay off","to be worth the effort; to finish paying a debt"],
+  ["Pick on","to repeatedly criticize or bully someone"],
+  ["Point out","to show or mention something important"],
+  ["Pull off","to succeed in doing something difficult"],
+  ["Pull over","to drive a vehicle to the side of the road and stop"],
+  ["Put up with","to tolerate something or someone unpleasant"],
+  ["Rip off","to charge someone too much money; to cheat or steal"],
+  ["Rule out","to eliminate a possibility"],
+  ["Run into","to meet someone by chance; to hit something with a vehicle"],
+  ["Run over","to hit someone or something with a vehicle; to quickly review"],
+  ["Screw up","to make a serious mistake (informal)"],
+  ["Sell out","to sell all of something; to betray your principles for money"],
+  ["Set up","to arrange or organize; to install equipment; to trick someone into being blamed"],
+  ["Settle down","to start living a stable life; to become calm"],
+  ["Show off","to try to impress people with your abilities or possessions"],
+  ["Shut up","to stop talking (rude/informal)"],
+  ["Sit down","to move from standing to a sitting position"],
+  ["Stand for","to represent (an abbreviation); to tolerate (I will not stand for it)"],
+  ["Stand up","to rise to a standing position; to fail to meet someone as arranged (stand someone up)"],
+  ["Stop over","to stay somewhere briefly during a journey"],
+  ["Switch off","to turn off a device; to stop paying attention"],
+  ["Switch on","to turn on a device"],
+  ["Take out","to remove; to take someone on a date; to get food to eat elsewhere"],
+  ["Think about","to consider something"],
+  ["Think ahead","to plan for the future"],
+  ["Think up","to invent or create an idea"],
+  ["Throw away","to put something in the trash; to waste an opportunity"],
+  ["Throw out","to discard something; to force someone to leave"],
+  ["Throw up","to vomit"],
+  ["Try on","to put on clothes to see if they fit"],
+  ["Turn down","to refuse an offer or request; to reduce volume or heat"],
+  ["Turn in","to submit work; to go to bed"],
+  ["Turn into","to become or transform into something different"],
+  ["Turn off","to stop a device from working; to cause someone to lose interest"],
+  ["Turn on","to start a device; to make someone interested or excited"],
+  ["Use up","to consume all of something"],
+  ["Wake up","to stop sleeping"],
+  ["Watch out","to be careful about danger"],
+  ["Wear down","to gradually make something weaker through use or pressure"],
+  ["Work out","to exercise; to find a solution; to end successfully"],
+  ["Wrap up","to finish something; to cover something in paper; to dress warmly"]
+];
+
+var pvOrder = [];
+var pvPos = 0;
+
+function shufflePV() {
+  pvOrder = PHRASAL_VERBS.map(function(_, i){ return i; });
+  for (var i = pvOrder.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = pvOrder[i]; pvOrder[i] = pvOrder[j]; pvOrder[j] = t;
+  }
+  pvPos = 0;
+}
+
+function currentPV() { return PHRASAL_VERBS[pvOrder[pvPos % pvOrder.length]]; }
 
 var PROMPTS = [
   {day:1,  focus:"Leadership philosophy",         text:"What is your leadership philosophy, and how has it evolved through your career?"},
@@ -325,8 +488,19 @@ async function sendMessage() {
   chatHistory.push({ role: 'user', content: text });
   showTyping();
   try {
-    var p = PROMPTS[promptIdx];
-    var systemText = MODES[currentMode].sys + '\n\nToday\'s topic: "' + p.text + '" (Focus: ' + p.focus + ')';
+    var systemText;
+    if (currentMode === 'phrasal') {
+      if (pvOrder.length === 0) shufflePV();
+      var cur = currentPV();
+      pvPos++;
+      var nxt = currentPV();
+      systemText = MODES.phrasal.sys +
+        '\n\nCURRENT phrasal verb the student was asked to use: "' + cur[0] + '" (meaning: ' + cur[1] + ').' +
+        '\nNEXT phrasal verb to present at the end of your reply: "' + nxt[0] + '" — ' + nxt[1];
+    } else {
+      var p = PROMPTS[promptIdx];
+      systemText = MODES[currentMode].sys + '\n\nToday\'s topic: "' + p.text + '" (Focus: ' + p.focus + ')';
+    }
     var messages = [{ role: 'system', content: systemText }].concat(chatHistory.slice(-12));
     var reply = await tryModels(messages);
     removeTyping();
@@ -345,6 +519,12 @@ function setMode(m) {
   document.querySelectorAll('.mode-tab').forEach(function(t){ t.classList.remove('active'); });
   document.querySelector('[data-mode="' + m + '"]').classList.add('active');
   document.getElementById('modeDesc').textContent = MODES[m].desc;
+  if (m === 'phrasal') {
+    shufflePV();
+    var pv = currentPV();
+    addBubble('ai', '📚 <strong>Phrasal Verbs</strong> mode. 140 verbs, randomized — precision and register matter here.<br><br>📚 <strong>First:</strong> ' + esc(pv[0]) + ' — <em>' + esc(pv[1]) + '</em><br><br>Use it in a sophisticated, professional sentence. Show me nuance.');
+    return;
+  }
   var intros = {
     debate: 'Modo <strong>Debate</strong> ativado. Argumente, challenge assumptions, defend your position.',
     refinement: 'Modo <strong>Refinamento</strong> ativado. Cole um texto, email ou discurso — vou analisar registro, precisão e estilo.',
