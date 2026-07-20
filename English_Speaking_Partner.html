@@ -684,6 +684,7 @@ async function sendMessage() {
       systemText = MODES[currentMode].sys +
         '\n\nToday\'s speaking prompt for Marcos: "' + p.text + '" (Focus: ' + p.focus + ')';
     }
+    systemText += '\n\nCRITICAL LANGUAGE RULE: Write your ENTIRE reply in English only. NEVER write sentences in Portuguese. Corrected sentences, examples and explanations must ALWAYS be in English. If the student writes in Portuguese or mixes Portuguese words into the sentence, do NOT repeat the Portuguese — instead show the full correct sentence written completely in English.';
     var messages = [{ role: 'system', content: systemText }].concat(chatHistory.slice(-12));
 
     var reply = await tryModels(messages);
